@@ -6,6 +6,6 @@ public class Main {
     public static void main(String[] args) {
         DatabaseHandler db = new DatabaseHandler();
         Connection conn =db.connect_to_db("my_task","postgres","ksolves");
-
+        db.generate_pass(conn,"ayevavs");
     }
 }

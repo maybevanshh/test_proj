@@ -3,7 +3,9 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.BufferedReader;
 import java.io.Console;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.UnknownServiceException;
 import java.security.MessageDigest;
 import java.sql.*;
 
@@ -30,16 +32,25 @@ public class DatabaseHandler {
     }
     public void insert_User(Connection conn,String name, Integer age,String username){
         try{
-            String id = ids();
-            PreparedStatement st = conn.prepareStatement("INSERT INTO TEST1(ID, NAME, AGE, USERNAME) VALUES(?, ?, ?, ?) ");
+            Statement s1 = conn.createStatement();
+            String checker = ("Select username from test1 where username='"+ username+"' ");
+            ResultSet rs = s1.executeQuery(checker);
+            rs.next();
+            String tocheck = rs.getString("username");
+            if(tocheck.equals(username)){
+                System.out.println("User already exists, please try again");
+            }else {
+                String id = ids();
+                PreparedStatement st = conn.prepareStatement("INSERT INTO TEST1(ID, NAME, AGE, USERNAME) VALUES(?, ?, ?, ?) ");
 //            String query=("insert into test1 values('"+ id +"' '"+ name +"' "+ age +" '"+ username +"');");
-            st.setString(1,id);
-            st.setString(2,name);
-            st.setInt(3,age);
-            st.setString(4,username);
-            st.executeUpdate();
-            st.close();
-            System.out.println("User added");
+                st.setString(1, id);
+                st.setString(2, name);
+                st.setInt(3, age);
+                st.setString(4, username);
+                st.executeUpdate();
+                st.close();
+                System.out.println("User added");
+            }
         }catch (Exception e){
             System.out.println(e);
         }
@@ -73,7 +84,7 @@ public class DatabaseHandler {
             }
             return sb.toString();
         }catch (Exception e){
-            System.out.println(e + "fucker hashing didnt work");
+            System.out.println(e + "hashing didnt work");
         }
         return "";
     }
@@ -99,8 +110,36 @@ public class DatabaseHandler {
         }
         }
 
-        public void login_auth(Connection conn,String username, String pass){
+        public void login_auth(Connection conn)  {
 
+        BufferedReader reader =new BufferedReader(new InputStreamReader(System.in));
+        System.out.print("input username please:");
+            String username = null;
+            String pass = null;
+            try {
+                username = reader.readLine();
+                System.out.println("please input password:");
+                pass = reader.readLine();
+            } catch (IOException e) {
+            }
+
+            String query = ("SELECT USERNAME,PASSWORDHASH FROM CRIDENTIALS WHERE USERNAME='"+username+"'");
+
+        Statement statement;
+            try {
+                statement = conn.createStatement();
+                ResultSet rs = statement.executeQuery(query);
+                rs.next();
+                String hash = rs.getString("passwordhash");
+                if (pencrypt(pass).equals(hash)){
+                    System.out.println("User authourised");
+                }
+                else {
+                    System.out.println("Input correct pass please");
+                }
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
 
 
         }
