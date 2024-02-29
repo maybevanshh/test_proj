@@ -129,7 +129,9 @@ public class DatabaseHandler {
             try {
                 statement = conn.createStatement();
                 ResultSet rs = statement.executeQuery(query);
-                rs.next();
+                if(!rs.next()){
+                    System.out.println("No user exists");
+                }
                 String hash = rs.getString("passwordhash");
                 if (pencrypt(pass).equals(hash)){
                     System.out.println("User authourised");
@@ -137,8 +139,9 @@ public class DatabaseHandler {
                 else {
                     System.out.println("Input correct pass please");
                 }
+
             } catch (SQLException e) {
-                System.out.println(e);
+                System.out.println("perhaps try creating a user first");
             }
 
 
