@@ -2,44 +2,24 @@ package org.ksolves;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.io.BufferedReader;
-import java.io.Console;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.UnknownServiceException;
 import java.security.MessageDigest;
 import java.sql.*;
+import java.util.Properties;
 
 public class DatabaseHandler {
-    public Connection connect_to_db(String dbname,String username, String password){
-        Connection connection = null;
-        try {
-            Class.forName("org.postgresql.Driver");
-            connection= DriverManager.getConnection("jdbc:postgresql://127.0.0.1:5432/" + dbname,username,password);
-            if(connection != null){
-                System.out.println("connecttion established");
-            }
-            else{
-                System.out.println("error in connection");
-            }
 
-        }catch (Exception e){
-            System.out.println(e);
-        }
-    return connection;
-    }
     private String ids(){
     return RandomStringUtils.randomAlphanumeric(10);
     }
-    public void insert_User(Connection conn,String name, Integer age,String username){
-        try{
+    public Boolean insert_User(Connection conn,String name,Integer age,String username){
+        try {
             Statement s1 = conn.createStatement();
             String checker = ("Select username from test1 where username='"+ username+"' ");
             ResultSet rs = s1.executeQuery(checker);
-            rs.next();
-            String tocheck = rs.getString("username");
-            if(tocheck.equals(username)){
-                System.out.println("User already exists, please try again");
-            }else {
+            if(!rs.next()){
                 String id = ids();
                 PreparedStatement st = conn.prepareStatement("INSERT INTO TEST1(ID, NAME, AGE, USERNAME) VALUES(?, ?, ?, ?) ");
 //            String query=("insert into test1 values('"+ id +"' '"+ name +"' "+ age +" '"+ username +"');");
@@ -50,10 +30,17 @@ public class DatabaseHandler {
                 st.executeUpdate();
                 st.close();
                 System.out.println("User added");
+                return true;
+            }else {
+            String tocheck = rs.getString("username");
+            if(tocheck.equals(username)){
+                System.out.println("User already exists, please try again");
+                return false;
+            }
             }
         }catch (Exception e){
             System.out.println(e);
-        }
+        }return  false;
     }
 
     private String checkuser(Connection conn, String username){
@@ -89,6 +76,7 @@ public class DatabaseHandler {
         return "";
     }
     public void generate_pass(Connection conn,String username){
+
         try{
             String id = checkuser(conn,username);
             System.out.println("Please input your password :");
