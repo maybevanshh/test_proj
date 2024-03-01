@@ -13,7 +13,7 @@ public class Main {
         try{
             connection = DbConnector.connection();
             if (connection != null){
-                System.out.println("connection established");
+                System.out.println("---------------------Welcome-------------------------");
             }else {
                 System.out.println("error in connection");
             }
@@ -21,14 +21,12 @@ public class Main {
             System.out.println(e);
         }
         Scanner s = new Scanner(System.in);
-        System.out.println ("---------------------Welcome-------------------------");
         System.out.println("Select an option: 1.Register to database       2. Login");
         int e = s.nextInt();
-        System.out.println();
         if(e==1){
                 System.out.println("Please enter name:");
                 String name = s.next();
-                System.out.println("Please enter age more than 18:");
+                System.out.println("Please enter age more than 19:");
                 Integer age = s.nextInt();
                 System.out.println("Please enter username:");
                 String uname = s.next();

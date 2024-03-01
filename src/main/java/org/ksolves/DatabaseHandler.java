@@ -53,7 +53,6 @@ public class DatabaseHandler {
             ResultSet rs = statement.executeQuery(st);
             rs.next();
             s= rs.getString(1);
-            System.out.println(s);
         }catch (Exception e){
             System.out.println(e + "user does not exits probably");
         }
@@ -85,7 +84,7 @@ public class DatabaseHandler {
             //generating hashed password
             String passwordString = inputpas.readLine();
             String hashedpass = pencrypt(passwordString);
-            System.out.println("hashed pass back to input in db");
+            System.out.println("-----------------Your Password is encrypted------------------");
             PreparedStatement st = conn.prepareStatement("INSERT INTO CRIDENTIALS(ID,USERNAME,PASSWORDHASH) VALUES(?, ?, ?)");
             st.setString(1,id);
             st.setString(2,username);
