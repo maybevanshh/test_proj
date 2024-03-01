@@ -122,6 +122,7 @@ public class DatabaseHandler {
                 String hash = rs.getString("passwordhash");
                 if (pencrypt(pass).equals(hash)){
                     System.out.println("User authourised");
+                    System.out.println("Welcome , "+ username);
                 }
                 else {
                     System.out.println("Input correct pass please");

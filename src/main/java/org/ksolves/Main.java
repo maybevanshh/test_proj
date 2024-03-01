@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        Users user = new Users();
         DatabaseHandler db = new DatabaseHandler();
         Connection connection = null;
         try{
@@ -26,12 +27,15 @@ public class Main {
         if(e==1){
                 System.out.println("Please enter name:");
                 String name = s.next();
+                user.setName(name);
                 System.out.println("Please enter age more than 19:");
                 Integer age = s.nextInt();
+                user.setAge(age);
                 System.out.println("Please enter username:");
                 String uname = s.next();
-                Boolean b = db.insert_User(connection,name,age,uname);
-                if(uname != null && b==true ){db.generate_pass(connection,uname);}
+                user.setUsername(uname);
+                Boolean b = db.insert_User(connection, user.getName(), user.getAge(), user.getUsername());
+                if(user.getUsername() != null && b==true ){db.generate_pass(connection,uname);}
         } else if (e==2) {
                 db.login_auth(connection);
 
